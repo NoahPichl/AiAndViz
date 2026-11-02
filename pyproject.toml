@@ -3,12 +3,16 @@ name = "jurassic-plots"
 version = "0.1.0"
 description = "Team to visualize the tirex-2 model outputs"
 readme = "README.md"
-requires-python = ">=3.12"
+requires-python = "==3.12.*"
 dependencies = [
+    "datasets",
+    "gluonts",
     "notebook>=7.6.3",
-    "pandas>=3.1.0",
+    "pandas>=2.0.0,<3",
+    "python-dotenv",
     "tirex-2[examples]>=0.3.1",
 ]
 
 [tool.ruff.lint]
 extend-select = ["I"]
+

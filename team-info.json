@@ -28,7 +28,6 @@
             "last_name": "Barcik",
             "email": "k12337466@students.jku.at ",
             "github_user": "tobbarAI"
-        },
-        // ...add a record for each student
+        }
     ]
 }
