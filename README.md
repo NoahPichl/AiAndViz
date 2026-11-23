@@ -66,3 +66,35 @@ uv run python TIME/experiments/tirex2_model.py \
 
 Results are saved to `output/results/TiRex2` by default.
 
+
+## Phase II – Opening the Black Box
+
+Concept and results: `ai-interactions/phase2.md`. Notebook: `phase2.ipynb`. Code: `phase2/`.
+
+Additional setup (raw TIME data and the TIME submodule are needed to rebuild forecast windows):
+
+```bash
+git submodule update --init
+uv run python -c "from huggingface_hub import snapshot_download; snapshot_download('Real-TSF/TIME', repo_type='dataset', local_dir='data/TIME')"
+```
+
+Long-running jobs cache their results in `output/phase2/` (the notebook only reads the caches):
+
+```bash
+uv run python -m phase2 attributions      # IG, LIME, KernelSHAP, STL-Shapley (~1.5 h on an RTX 3070)
+uv run python -m phase2 representations   # hidden states + mLSTM gates (~1 min)
+```
+
+| module | content |
+|---|---|
+| `phase2/model_io.py` | TiRex-2 wrapper: differentiable forecasts, hidden states per block, mLSTM gate capture |
+| `phase2/windows.py` | rebuilds every TIME forecast window exactly like the benchmark runner |
+| `phase2/groups.py` | per-window behaviour table and the Phase I behaviour groups |
+| `phase2/attribution.py` | Integrated Gradients (captum), LIME, KernelSHAP (shap), STL-component Shapley |
+| `phase2/representations.py` | layer-wise maps (UMAP), dataset-grouped linear probes, kNN analysis |
+| `phase2/counterfactual.py` | trend injection, level shifts, residual autocorrelation experiments |
+| `phase2/analysis.py`, `phase2/plots.py` | within-dataset statistics, static figures and the interactive explorer |
+
+Notes: the model is built with the native PyTorch kernels and then moved to the GPU because the Triton mLSTM
+kernels do not compile with the installed Triton; `Scaler.scale` is replaced by a numerically identical version
+with NaN-free gradients. The forecasts reproduce the stored Phase I predictions (max. relative deviation 5e-4).

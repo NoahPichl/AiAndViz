@@ -7,9 +7,8 @@ import numpy as np
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
+from data_cube import feature_columns
 from IPython.display import display
-
-from team_blue.data_cube import feature_columns
 
 COLOR_OPTIONS = [
     ("MAE", "MAE_mean"),

@@ -11,3 +11,6 @@ wheels/
 
 # Data and Models
 data/*
+
+# Phase 2
+output/phase2/*
